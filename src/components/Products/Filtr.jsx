@@ -4,7 +4,6 @@ import { CiHeart } from 'react-icons/ci';
 import { HiOutlineShoppingCart } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import HomeNavbar from '../home/HomeNavbar';
-// import './Filtr.scss'; // SCSS dosyasını ekleyin
 
 const SUPABASE_URL = 'https://btsdjmkresicezlbutpm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU';
@@ -34,7 +33,6 @@ function Filtr() {
         setProducts(productsData);
       }
 
-      // Benzersiz kategorileri almak için sorgu
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('products')
         .select('product_category');
@@ -42,7 +40,6 @@ function Filtr() {
       if (categoriesError) {
         console.error('Error fetching categories:', categoriesError);
       } else {
-        // Benzersiz kategorileri elde et
         const uniqueCategories = [...new Set(categoriesData.map(item => item.product_category))];
         setCategories(uniqueCategories);
       }

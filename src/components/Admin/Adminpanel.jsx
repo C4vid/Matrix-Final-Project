@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-// Supabase konfiqurasiyası
 const supabaseUrl = "https://btsdjmkresicezlbutpm.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -75,13 +74,13 @@ const AdminPanel = () => {
         }
 
         setLoading(true);
-        const { id, ...productData } = editProduct; // id-ni çıxarırıq
-        const { data, error } = await supabase.from("products").update(productData).eq("id", id); // yalnız productData göndəririk
+        const { id, ...productData } = editProduct; 
+        const { data, error } = await supabase.from("products").update(productData).eq("id", id); 
         setLoading(false);
         if (error) {
             setError("Məhsul redaktə edilərkən xəta baş verdi: " + error.message);
         } else {
-            if (data && data.length > 0) { // data-nın null olmadığını və uzunluğunun 0-dan böyük olduğunu yoxlayırıq
+            if (data && data.length > 0) {
                 setProducts(products.map(product => (product.id === id ? data[0] : product)));
                 setEditProduct(null);
                 setMessage("Məhsul uğurla redaktə edildi.");

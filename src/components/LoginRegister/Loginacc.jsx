@@ -29,13 +29,11 @@ const Loginacc = () => {
         setIsSubmitting(true);
 
         try {
-            // Admin e-posta və şifrəni yoxla
             if (formData.email === "admin@example.com" && formData.password === "adminPassword") {
-                navigate("/adminhomepage"); // Admin ana səhifəsinə yönləndir
+                navigate("/adminhomepage"); 
                 return;
             }
 
-            // accounts tablosundan e-posta ve şifre ile kullanıcıyı kontrol et
             const { data, error: fetchError } = await supabase
                 .from('accounts')
                 .select('*')
@@ -49,7 +47,6 @@ const Loginacc = () => {
                 return setError("E-posta veya şifre hatalı.");
             }
 
-            // Uğurlu girişdən sonra ana səhifəyə yönləndir
             navigate("/"); 
         } catch (error) {
             console.error("Genel hata:", error);
@@ -61,10 +58,11 @@ const Loginacc = () => {
     };
 
     return (
-        <div>
+        <div className="login">
+        <div className="login-container">
             <h2>Giriş Yap</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
+            <form onSubmit={handleSubmit} className="login-form">
+                <div className="form-group">
                     <label>E-posta:</label>
                     <input
                         type="email"
@@ -74,7 +72,7 @@ const Loginacc = () => {
                         required
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label>Şifre:</label>
                     <input
                         type="password"
@@ -84,15 +82,16 @@ const Loginacc = () => {
                         required
                     />
                 </div>
-                {error && <p style={{ color: "red" }}>{error}</p>}
-                <button type="submit" disabled={isSubmitting}>
+                {error && <p className="error-message">{error}</p>}
+                <button type="submit" disabled={isSubmitting} className="submit-button">
                     {isSubmitting ? "Giriş Yapılıyor..." : "Giriş Yap"}
                 </button>
             </form>
-            <p>
+            <p className="register-prompt">
                 Hesabınız yok mu?{" "}
-                <button onClick={() => navigate("/register")}>Kayıt Ol</button>
+                <button onClick={() => navigate("/register")} className="register-button">Kayıt Ol</button>
             </p>
+        </div>
         </div>
     );
 };

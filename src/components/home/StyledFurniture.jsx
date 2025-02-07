@@ -4,7 +4,6 @@ import { CiHeart } from 'react-icons/ci';
 import { IoIosSearch, IoIosShuffle } from 'react-icons/io';
 import { HiOutlineShoppingCart } from 'react-icons/hi';
 
-// Supabase URL ve Anon Key'inizi buraya ekleyin
 const SUPABASE_URL = 'https://btsdjmkresicezlbutpm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU';
 
@@ -21,7 +20,7 @@ const StyledFurniture = () => {
             const { data, error } = await supabase
               .from('products')
               .select('id, product_name, cost, discount_price, photo_url, photo_hover_url, product_popularity, product_wishlist')
-              .limit(4); // Maksimum 4 məhsul gətir
+              .limit(4);
 
             if (error) {
                 console.error('Error fetching products:', error);
@@ -40,7 +39,7 @@ const StyledFurniture = () => {
 
     const calculateDiscountPercentage = (cost, discountPrice) => {
         if (cost && discountPrice) {
-            return Math.floor(((cost - discountPrice) / cost) * 100); // Kəsr hissəsini atır
+            return Math.floor(((cost - discountPrice) / cost) * 100); 
         }
         return 0;
     };
@@ -65,13 +64,13 @@ const StyledFurniture = () => {
     const handleAddToCart = async (product) => {
         const { error } = await supabase
           .from('products')
-          .update({ checkout: 'incart' }) // checkout sütununa 'incart' yazılır
+          .update({ checkout: 'incart' }) 
           .eq('id', product.id);
 
         if (error) {
             console.error('Error adding to cart:', error);
         } else {
-            alert(`${product.product_name} cart-a əlavə edildi!`); // Prompt mesajı
+            alert(`${product.product_name} cart-a əlavə edildi!`); 
         }
     };
 

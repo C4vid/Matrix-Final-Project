@@ -64,13 +64,13 @@ const PopularFurniture = () => {
   const handleAddToCart = async (product) => {
     const { error } = await supabase
       .from('products')
-      .update({ checkout: 'incart' }) // checkout sütununa 'incart' yazılır
+      .update({ checkout: 'incart' }) 
       .eq('id', product.id);
 
     if (error) {
       console.error('Error adding to cart:', error);
     } else {
-      alert(`${product.product_name} cart-a əlavə edildi!`); // Prompt mesajı
+      alert(`${product.product_name} cart-a əlavə edildi!`); 
       console.log('Product added to cart:', product);
     }
   };
