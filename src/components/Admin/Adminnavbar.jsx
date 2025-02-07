@@ -6,7 +6,7 @@ import { CiHeart } from "react-icons/ci";
 import { PiShoppingCartLight } from "react-icons/pi";
 import Badge from '@mui/material/Badge';
 
-const HomeNavbar = () => {
+const Adminnavbar = () => {
   return (
     <div className='navbar'>
       <div className="navbar-logo">
@@ -30,6 +30,9 @@ const HomeNavbar = () => {
           </li>
           <li>
             <Link to="/contact">Contact</Link>
+          </li>
+          <li>
+            <Link to="/adminpanel">Dashboard</Link>
           </li>
         </ul>
         <div className="navbar-register">
@@ -56,4 +59,4 @@ const HomeNavbar = () => {
   );
 }
 
-export default HomeNavbar;
+export default Adminnavbar;

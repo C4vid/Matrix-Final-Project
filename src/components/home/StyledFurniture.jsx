@@ -20,7 +20,7 @@ const StyledFurniture = () => {
             setLoading(true);
             const { data, error } = await supabase
               .from('products')
-              .select('id, product_name, cost, discount_price, photo_url, photo_hover_url, product_popularity')
+              .select('id, product_name, cost, discount_price, photo_url, photo_hover_url, product_popularity, product_wishlist')
               .limit(4); // Maksimum 4 məhsul gətir
 
             if (error) {
@@ -45,6 +45,36 @@ const StyledFurniture = () => {
         return 0;
     };
 
+    const toggleWishlist = async (product) => {
+        const newStatus = product.product_wishlist === 'liked' ? 'unliked' : 'liked';
+
+        const { error } = await supabase
+          .from('products')
+          .update({ product_wishlist: newStatus })
+          .eq('id', product.id);
+
+        if (error) {
+            console.error('Error updating wishlist status:', error);
+        } else {
+            setProducts((prevProducts) =>
+                prevProducts.map((p) => (p.id === product.id ? { ...p, product_wishlist: newStatus } : p))
+            );
+        }
+    };
+
+    const handleAddToCart = async (product) => {
+        const { error } = await supabase
+          .from('products')
+          .update({ checkout: 'incart' }) // checkout sütununa 'incart' yazılır
+          .eq('id', product.id);
+
+        if (error) {
+            console.error('Error adding to cart:', error);
+        } else {
+            alert(`${product.product_name} cart-a əlavə edildi!`); // Prompt mesajı
+        }
+    };
+
     return (
         <div className='styledfurniture'>
             <div className="styledfurniture-txt">
@@ -56,7 +86,7 @@ const StyledFurniture = () => {
                 {products.map((product) => {
                     const discountPercentage = calculateDiscountPercentage(product.cost, product.discount_price);
                     return (
-                        <li className="product-item" key={product.product_name}>
+                        <li className="product-item" key={product.id}>
                             <div className="styledfurniture-products-price">
                                 {product.discount_price !== 0.00 ? (
                                     <div className="styledfurniture-products-price-sale">
@@ -89,11 +119,16 @@ const StyledFurniture = () => {
                             />
                             <h2>{product.product_name}</h2>
                             <div className="product-icons">
-                                <CiHeart />
-                                <IoIosShuffle />
-                                <IoIosSearch />
+                                <CiHeart 
+                                    onClick={() => toggleWishlist(product)} 
+                                    style={{ color: product.product_wishlist === 'liked' ? 'red' : 'black', cursor: 'pointer' }} 
+                                />
                             </div>
-                            <button className="product-item-buy-btn"><HiOutlineShoppingCart /> Add to Cart</button>
+                            <button className="product-item-buy-btn" onClick={() => handleAddToCart(product)}
+                                style={{ cursor: 'pointer' }} >
+
+                                <HiOutlineShoppingCart /> Add to Cart
+                            </button>
                         </li>
                     );
                 })}

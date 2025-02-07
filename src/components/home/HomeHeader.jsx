@@ -14,7 +14,6 @@ import Headercart3 from '../../assets/Images/HomePage/homeheadercart3.jpg'
 const HomeHeader = () => {
   return (
     <div className='header'>
-        <HomeNavbar/>
         <div className="home-header">
             <div className="home-header-main">
                 <div className="home-header-main-text">

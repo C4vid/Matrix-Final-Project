@@ -5,9 +5,8 @@ import { IoIosShuffle } from "react-icons/io";
 import { IoIosSearch } from "react-icons/io";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
-
 const supabaseUrl = 'https://btsdjmkresicezlbutpm.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU'; // Anonim açarınızı daxil edin
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const PopularFurniture = () => {
@@ -19,9 +18,9 @@ const PopularFurniture = () => {
       setLoading(true);
       const { data, error } = await supabase
         .from('products')
-        .select('id, product_name, cost, discount_price, photo_url, photo_hover_url, product_popularity')
-        .gt('product_popularity', 3) // 4 və ya daha yüksək olanları seçin
-        .limit(6); // Maksimum 6 məhsul gətir
+        .select('id, product_name, cost, discount_price, photo_url, photo_hover_url, product_popularity, product_wishlist')
+        .gt('product_popularity', 3)
+        .limit(6);
 
       if (error) {
         console.error('Error fetching products:', error);
@@ -38,12 +37,42 @@ const PopularFurniture = () => {
     return <div>Loading...</div>;
   }
 
-  // Endirim faizini hesablayan funksiya
   const calculateDiscountPercentage = (cost, discountPrice) => {
     if (cost && discountPrice) {
-      return Math.floor(((cost - discountPrice) / cost) * 100); // Kəsr hissəsini atır
+      return Math.floor(((cost - discountPrice) / cost) * 100);
     }
     return 0;
+  };
+
+  const toggleWishlist = async (product) => {
+    const newStatus = product.product_wishlist === 'liked' ? 'unliked' : 'liked';
+
+    const { error } = await supabase
+      .from('products')
+      .update({ product_wishlist: newStatus })
+      .eq('id', product.id);
+
+    if (error) {
+      console.error('Error updating wishlist status:', error);
+    } else {
+      setProducts((prevProducts) =>
+        prevProducts.map((p) => (p.id === product.id ? { ...p, product_wishlist: newStatus } : p))
+      );
+    }
+  };
+
+  const handleAddToCart = async (product) => {
+    const { error } = await supabase
+      .from('products')
+      .update({ checkout: 'incart' }) // checkout sütununa 'incart' yazılır
+      .eq('id', product.id);
+
+    if (error) {
+      console.error('Error adding to cart:', error);
+    } else {
+      alert(`${product.product_name} cart-a əlavə edildi!`); // Prompt mesajı
+      console.log('Product added to cart:', product);
+    }
   };
 
   return (
@@ -68,7 +97,7 @@ const PopularFurniture = () => {
                 ) : (
                   <p>${product.cost}</p>
                 )}
-              </div>              
+              </div>
               {discountPercentage > 0 && (
                 <p className='product-item-discountpercentage'>
                   {discountPercentage}%
@@ -86,13 +115,15 @@ const PopularFurniture = () => {
               <h2>{product.product_name}</h2>
 
               <div className="product-icons">
-                <CiHeart />
-                <IoIosShuffle />
-                <IoIosSearch />
+                <CiHeart 
+                  onClick={() => toggleWishlist(product)} 
+                  style={{ color: product.product_wishlist === 'liked' ? 'red' : 'black', cursor: 'pointer' }} 
+                />
               </div>
-              <button className="product-item-buy-btn"><HiOutlineShoppingCart /> Add to Cart</button>
-
-
+              <button className="product-item-buy-btn" onClick={() => handleAddToCart(product)}
+                style={{ cursor: 'pointer' }} >
+                <HiOutlineShoppingCart /> Add to Cart
+              </button>
             </li>
           );
         })}
