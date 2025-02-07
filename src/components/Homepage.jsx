@@ -7,10 +7,12 @@ import WoodenFurniture from './home/WoodenFurniture'
 import PopularFurniture from './home/PopularFurniture'
 import HomeBrands from './home/HomeBrands'
 import HomeFooter from './home/HomeFooter'
+import HomeNavbar from './home/HomeNavbar'
 
 const Homepage = () => {
   return (
     <div>
+        <HomeNavbar/>
         <HomeHeader/> 
         <HomeExplore/>
         <HomeExploreCollection/>
