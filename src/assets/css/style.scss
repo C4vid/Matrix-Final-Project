@@ -7,24 +7,41 @@
 //navbar
 .navbar{
     position: sticky;
-    background-color: #fff;
     width: 100%;
     height: 93px;
+    padding: 0 8.5% !important;
     display: flex;
     align-items: center;
-    padding: 0 8.5% !important;
     justify-content: space-between;
     z-index: 99999999;
-    .navbar-logo{
+
+    .navbar-nav{
+        display: flex;
+        align-items: center;
+
+    }
+    .container{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .burger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+      }
+      
+      .burger div {
+        width: 25px;
+        height: 3px;
+        background-color: #333;
+        margin: 4px 0;
+      }
         img{
             display: block;
             width: 150px;
         }
-    }
-    .navbar-main{
-        display: flex;
-        justify-content: space-between; 
-        .navbar-links{
+        .navbar-collapse{
             font-size: 18px;
             padding: 8px 25px 8px 25px;  
             background-color: #0e1d3d;
@@ -40,7 +57,7 @@
             }
             a:hover{
                 border-bottom: 1px solid #FFC107;
-                color: #FFC107;
+                color: #ffffff;
                 transition: all 0.2s ease-in-out;
             }
             a:focus{
@@ -48,32 +65,59 @@
             }
             
         }
-        .navbar-register, .navbar-wishlist, .navbar-cart{
-            font-size: 25px;
+        .navbar-cart-item{
             display: flex;
-            padding: 10px;
             align-items: center;
-            justify-content: center;
-            background-color:  #FFC107;
-            border-radius: 5px;
-            margin-left: 20px;
-            height: 100%;
-            cursor: pointer;
-            a{
+            position: relative;
+            .language-toggle{
+                button{
+                    font-size: 25px;
+                    display: flex;
+                    padding: 0 7px;
+                    align-items: center;
+                    justify-content: center;
+                    background-color:  #FFC107;
+                    border-radius: 5px;
+                    margin-left: 20px;
+                    height: 100%;
+                    color: #000;
+                }
+            }
+            .navbar-register, .navbar-wishlist, .navbar-cart{
+                font-size: 25px;
+                display: flex;
+                padding: 10px;
+                align-items: center;
+                justify-content: center;
+                background-color:  #FFC107;
+                border-radius: 5px;
+                margin-left: 20px;
+                height: 90%;
                 color: #000;
-                height: 34px;
+                cursor: pointer;
+                a{
+                    color: #000;
+                    height: 34px;
+                }
+                a:active{
+                    color: #000000;
+                }
+                .MuiBadge-badge{
+                    background-color: #000000;
+                    color: #FFC107;
+                    padding: 5px;
+                    margin-top: -20px;
+                }
+                
             }
-            a:active{
-                color: #000000;
+            .navbar-wishlist, .navbar-cart{
+                svg{
+                    margin-top: -20px;
+                }
             }
-            .MuiBadge-badge{
-                background-color: #000000;
-                color: #FFC107;
-                padding: 5px;
-            }
-            
         }
-    }
+
+    
 }
 
 //Homeheader
@@ -1487,26 +1531,101 @@
         }
     }
     .styledfurniture{
+        display: flex;
+        flex-direction: column;
         .styledfurniture-txt{
-            width: 25%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
             h2{
                 font-size: 30px !important;
             }
             p{
                 font-size: 16px !important;
             }
+            button{
+                margin-top: 27px !important;
+            }
 
         }
         .styledfurniture-products{
             display: flex;
-            flex-direction: row;
-            width: 75%;
+            flex-direction: row !important;
+            flex-wrap: wrap;
+            width: 100%;
+            .product-item{
+                width: 60%;
+                margin-bottom: 20px;
+                img{
+                    width: 100%;
+                    height: auto;
+                    border-radius: 8px;
+                }
+            }
             
         }
     }
+    .woodenfurniture{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .woodenfurniture-main{
+            width: 100%;
+            text-align: center;
+            button{
+                margin-top: 27px;
+            }
+        }
+    }
+    .popular-furniture{
+        .product-item{
+            width: 45%;
+        }
+    }
+    .homefooter-body{
+        display: flex;
+        flex-direction: column;
+        .homefooter-body-item{
+            width: 100%;
+            h2{
+                margin-top: 20px;
+                margin-bottom: 0;
+            }
+        }
+    }
+    
+      .show {
+        display: flex; 
+        flex-direction: column;
+        background-color: #0E1C3C;
+        height: 250px !important;
+        .navbar-register, .navbar-wishlist, .navbar-cart{
+            // height: ;
+        }
+      }
+    .navbar-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background-color: white;
+        width: 100%;
+        z-index: 1;
+      }
+    
+      .navbar-links.active {
+        display: flex;
+      }
+
 }
 /* Mobil cihazlar için stil ayarları */
 @media (max-width: 600px) {
+
 }
 
 
