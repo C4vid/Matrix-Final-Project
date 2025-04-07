@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { CiHeart } from 'react-icons/ci';
 import { HiOutlineShoppingCart } from 'react-icons/hi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import HomeNavbar from '../home/HomeNavbar';
+import { useTranslation } from 'react-i18next'; // i18next'i import et
 
 const SUPABASE_URL = 'https://btsdjmkresicezlbutpm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU';
@@ -12,6 +13,8 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function Filtr() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { t } = useTranslation(); // Çeviri fonksiyonunu al
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [hoveredProduct, setHoveredProduct] = useState(null);
@@ -50,8 +53,39 @@ function Filtr() {
     fetchProductsAndCategories();
   }, []);
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const searchText = searchParams.get('search');
+    const categoryText = searchParams.get('category');
+
+    if (searchText) {
+      setFilterText(searchText);
+    }
+
+    if (categoryText) {
+      setCategoryFilter(categoryText);
+    }
+  }, [location]);
+
+  const handleSearch = (e) => {
+    const searchValue = e.target.value;
+    setFilterText(searchValue);
+    navigate(`?search=${searchValue}&category=${categoryFilter}`);
+  };
+
+  const handleCategoryClick = (category) => {
+    setCategoryFilter(category);
+    navigate(`?search=${filterText}&category=${category}`);
+  };
+
+  const handleResetFilters = () => {
+    setFilterText(""); // Axtarış mətnini sıfırlayır
+    setCategoryFilter(""); // Kateqoriya seçimlərini sıfırlayır
+    navigate(`?search=&category=`); // URL-i yeniləyir
+  };
+
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <div className="loading">{t('loading')}</div>; // Çeviriyi kullan
   }
 
   const calculateDiscountPercentage = (cost, discountPrice) => {
@@ -75,7 +109,7 @@ function Filtr() {
       setProducts((prevProducts) =>
         prevProducts.map((p) => (p.id === product.id ? { ...p, product_wishlist: newStatus } : p))
       );
-      alert(`${product.product_name} wishlist-a əlavə edildi!`);
+      alert(`${product.product_name} ${t('wishlistAdded')}`); // Çeviriyi kullan
     }
   };
 
@@ -88,7 +122,7 @@ function Filtr() {
     if (error) {
       console.error('Error adding to cart:', error);
     } else {
-      alert(`${product.product_name} cart-a əlavə edildi!`);
+      alert(`${product.product_name} ${t('cartAdded')}`); // Çeviriyi kullan
     }
   };
 
@@ -104,74 +138,78 @@ function Filtr() {
 
   return (
     <>
-    <HomeNavbar/>
-    <div className='mainproducts'>
-      <input
-        type="text"
-        placeholder="Məhsul axtarın..."
-        value={filterText}
-        onChange={(e) => setFilterText(e.target.value)}
-        className="search-input"
-      />
-      <div className="category-buttons">
-        {categories.map((category, index) => (
-          <button key={index} onClick={() => setCategoryFilter(category)}>
-            {category}
+      <HomeNavbar />
+      <div className='mainproducts'>
+
+        <input
+          type="text"
+          placeholder={t('searchPlaceholder')} // Çeviriyi kullan
+          value={filterText}
+          onChange={handleSearch}
+          className="search-input"
+        />
+        <div className="category-buttons">
+          <button className="reset-button" onClick={handleResetFilters}>
+            {t('resetSearch')} // Çeviriyi kullan
           </button>
-        ))}
-        {/* <button onClick={() => setCategoryFilter("")}>Hamısını göstər</button> */}
-      </div>
-      <ul className='mainproducts-products'>
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => {
-            const discountPercentage = calculateDiscountPercentage(product.cost, product.discount_price);
-            return (
-              <li className="product-item" key={product.id}>
-                <div className="mainproducts-products-price">
-                  {product.discount_price !== 0.00 ? (
-                    <div className="mainproducts-products-price-sale">
-                      <p style={{ textDecorationLine: 'line-through', display: 'inline' }}>
-                        ${product.cost}
-                      </p>
-                      <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>
-                        ${product.discount_price}
-                      </span>
-                    </div>
-                  ) : (
-                    <p>${product.cost}</p>
+          {categories.map((category, index) => (
+            <button key={index} onClick={() => handleCategoryClick(category)}>
+              {category}
+            </button>
+          ))}
+        </div>
+        <ul className='mainproducts-products'>
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => {
+              const discountPercentage = calculateDiscountPercentage(product.cost, product.discount_price);
+              return (
+                <li className="product-item" key={product.id}>
+                  <div className="mainproducts-products-price" onClick={() => navigate(`/product/${product.id}`)} style={{ cursor: 'pointer' }}>
+                    {product.discount_price !== 0.00 ? (
+                      <div className="mainproducts-products-price-sale">
+                        <p style={{ textDecorationLine: 'line-through', display: 'inline' }}>
+                          ${product.cost}
+                        </p>
+                        <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>
+                          ${product.discount_price}
+                        </span>
+                      </div>
+                    ) : (
+                      <p>${product.cost}</p>
+                    )}
+                  </div>
+                  {discountPercentage > 0 && (
+                    <p className='product-item-discountpercentage' onClick={() => navigate(`/product/${product.id}`)} style={{ cursor: 'pointer' }}>
+                      {discountPercentage}% {t('off')} {/* Çeviriyi kullan */}
+                    </p>
                   )}
-                </div>
-                {discountPercentage > 0 && (
-                  <p className='product-item-discountpercentage'>
-                    {discountPercentage}% Off
-                  </p>
-                )}
-                <img
-                  src={product.photo_hover_url && hoveredProduct === product.product_name ? product.photo_hover_url : product.photo_url}
-                  alt={product.product_name}
-                  onMouseEnter={() => product.photo_hover_url && setHoveredProduct(product.product_name)}
-                  onMouseLeave={() => setHoveredProduct(null)}
-                  className="product-image"
-                />
-                <h2 onClick={() => navigate(`/product/${product.id}`)} style={{ cursor: 'pointer' }}>
-                  {product.product_name}
-                </h2>
-                <div className="product-icons">
-                  <CiHeart 
-                    onClick={() => toggleWishlist(product)} 
-                    style={{ cursor: 'pointer' }}/>
-                </div>
-                <button className="product-item-buy-btn" onClick={() => handleAddToCart(product)}>
-                  <HiOutlineShoppingCart /> Add to Cart
-                </button>
-              </li>
-            );
-          })
-        ) : (
-          <p>Məhsul tapılmadı.</p>
-        )}
-      </ul>
-    </div>
+                  <img
+                    onClick={() => navigate(`/product/${product.id}`)} style={{ cursor: 'pointer' }}
+                    src={product.photo_hover_url && hoveredProduct === product.product_name ? product.photo_hover_url : product.photo_url}
+                    alt={product.product_name}
+                    onMouseEnter={() => product.photo_hover_url && setHoveredProduct(product.product_name)}
+                    onMouseLeave={() => setHoveredProduct(null)}
+                    className="product-image"
+                  />
+                  <h2 onClick={() => navigate(`/product/${product.id}`)} style={{ cursor: 'pointer' }}>
+                    {product.product_name}
+                  </h2>
+                  <div className="product-icons">
+                    <CiHeart
+                      onClick={() => toggleWishlist(product)}
+                      style={{ cursor: 'pointer' }} />
+                  </div>
+                  <button className="product-item-buy-btn" onClick={() => handleAddToCart(product)}>
+                    <HiOutlineShoppingCart /> {t('addToCart')} {/* Çeviriyi kullan */}
+                  </button>
+                </li>
+              );
+            })
+          ) : (
+            <p>{t('noProductsFound')}</p> // Çeviriyi kullan
+          )}
+        </ul>
+      </div>
     </>
   );
 }

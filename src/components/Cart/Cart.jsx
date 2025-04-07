@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom'; // React Router'dan useNavigate'i içe aktar
 import HomeNavbar from '../home/HomeNavbar';
+import { useTranslation } from 'react-i18next'; // i18next'i import et
 
 const supabaseUrl = 'https://btsdjmkresicezlbutpm.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU'; 
@@ -12,6 +13,7 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate(); 
+  const { t } = useTranslation(); // Çeviri fonksiyonunu al
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -47,42 +49,34 @@ const Cart = () => {
   };
 
   const handleCheckout = async () => {
-    const { error } = await supabase
-      .from('products')
-      .update({ checkout: 'checked_out' }) 
-
-    if (error) {
-      console.error('Error during checkout:', error);
-    } else {
-      navigate('/checkoutdetails');
-    }
+    navigate('/checkoutdetails'); // Checkout səhifəsinə yönləndir
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>{t('loading')}</div>; // Çeviriyi kullan
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>{t('error', { message: error })}</div>; // Çeviriyi kullan
   }
 
   return (
     <>
       <HomeNavbar />
       <div className="cart-container">
-        <h3>Your Cart</h3>
+        <h3>{t('yourCart')}</h3> {/* Çeviriyi kullan */}
         {cartItems.length === 0 ? (
-          <p>Your cart is empty.</p>
+          <p>{t('emptyCart')}</p> 
         ) : (
           <>
             <table className="cart-table">
               <thead>
                 <tr>
-                  <th>Product Image</th>
-                  <th>Product Name</th>
-                  <th>Price</th>
-                  <th>Discounted Price</th>
-                  <th>Remove</th>
+                  <th>{t('productImage')}</th> {/* Çeviriyi kullan */}
+                  <th>{t('productName')}</th> {/* Çeviriyi kullan */}
+                  <th>{t('price')}</th> {/* Çeviriyi kullan */}
+                  <th>{t('discountedPrice')}</th> {/* Çeviriyi kullan */}
+                  <th>{t('remove')}</th> {/* Çeviriyi kullan */}
                 </tr>
               </thead>
               <tbody>
@@ -109,14 +103,16 @@ const Cart = () => {
                       )}
                     </td>
                     <td>
-                      <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
+                      <button onClick={() => handleRemoveItem(item.id)}>{t('remove')}</button> {/* Çeviriyi kullan */}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <button onClick={handleCheckout} style={{ marginTop: '20px', backgroundColor: '#4CAF50', color: 'white', padding: '10px 15px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-              Confirm Checkout
+            <button 
+              onClick={handleCheckout} 
+              style={{ marginTop: '20px', backgroundColor: '#4CAF50', color: 'white', padding: '10px 15px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+              {t('confirmCheckout')} {/* Çeviriyi kullan */}
             </button>
           </>
         )}

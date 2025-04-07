@@ -12,15 +12,15 @@ import HomeNavbar from './HomeNavbar'
 const Homepage = () => {
   return (
     <div>
-        <HomeNavbar/>
+        {/* <HomeNavbar/> */}
         <HomeHeader/> 
         <HomeExplore/>
         <HomeExploreCollection/>
         <StyledFurniture/>
-        <WoodenFurniture/>
+        {/* <WoodenFurniture/>
         <PopularFurniture/> 
         <HomeBrands/>
-        <HomeFooter/>
+        <HomeFooter/> */}
     </div>
   )
 }

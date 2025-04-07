@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
+import { useTranslation } from 'react-i18next'; // i18next'i import et
 
 const supabaseUrl = "https://btsdjmkresicezlbutpm.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU";
@@ -8,6 +9,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const Register = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation(); // Çeviri fonksiyonunu al
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -39,7 +41,7 @@ const Register = () => {
 
             if (existingUser) {
                 setIsSubmitting(false);
-                return setError("Bu e-posta adresi zaten kayıtlı.");
+                return setError(t("emailAlreadyRegistered")); // Çeviriyi kullan
             }
 
             const { data, error: signupError } = await supabase.auth.signUp({
@@ -72,64 +74,62 @@ const Register = () => {
         } catch (error) {
             console.error("Genel hata:", error);
             setIsSubmitting(false);
-            setError("Bir hata oluştu, lütfen daha sonra tekrar deneyin.");
+            setError(t("generalError")); // Çeviriyi kullan
         }
     };
 
     return (
         <div className="register">
-        <div className="register-container">
-            <h2>Kayıt Ol</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Kullanıcı Adı:</label>
-                    <input
-                        type="text"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>E-posta:</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Şifre:</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="rememberme">
-                    <label >
-                        Beni Hatırla
-                    </label>
+            <div className="register-container">
+                <h2>{t("registerTitle")}</h2> {/* Çeviriyi kullan */}
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label>{t("usernameLabel")}</label> {/* Çeviriyi kullan */}
+                        <input
+                            type="text"
+                            name="username"
+                            value={formData.username}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label>{t("emailLabel")}</label> {/* Çeviriyi kullan */}
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label>{t("passwordLabel")}</label> {/* Çeviriyi kullan */}
+                        <input
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="rememberme">
+                        <label>{t("rememberMeLabel")}</label> {/* Çeviriyi kullan */}
                         <input
                             type="checkbox"
                             name="rememberMe"
                             checked={formData.rememberMe}
                             onChange={handleChange}
                         />
-                </div>
-                {error && <p className="error-message">{error}</p>}
-                <button type="submit" disabled={isSubmitting}>Kaydol</button>
-            </form>
-            <p>
-                Zaten hesabınız var mı?{" "}
-                <button onClick={() => navigate("/login")}>Giriş Yap</button>
-            </p>
-        </div>
+                    </div>
+                    {error && <p className="error-message">{error}</p>}
+                    <button type="submit" disabled={isSubmitting}>{t("registerButton")}</button> {/* Çeviriyi kullan */}
+                </form>
+                <p>
+                    {t("alreadyHaveAccountPrompt")}{" "}
+                    <button onClick={() => navigate("/login")}>{t("loginButton")}</button> {/* Çeviriyi kullan */}
+                </p>
+            </div>
         </div>
     );
 };

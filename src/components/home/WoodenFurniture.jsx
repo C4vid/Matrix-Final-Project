@@ -1,17 +1,21 @@
-import React from 'react'
-import Woodenfurniture from '../../assets/Images/HomePage/woodenfurniture.jpg'
+import React from 'react';
+import Woodenfurniture from '../../assets/Images/HomePage/woodenfurniture.jpg';
+import { useTranslation } from 'react-i18next'; // i18next'i import et
+
 const WoodenFurniture = () => {
+  const { t } = useTranslation(); // Çeviri fonksiyonunu al
+
   return (
     <div className='woodenfurniture'>
       <div className="woodenfurniture-img">
-        <img src={Woodenfurniture} alt="" />
+        <img src={Woodenfurniture} alt={t('woodenFurnitureAlt')} /> {/* Alt metni çeviri ile dinamik hale getir */}
       </div>
       <div className="woodenfurniture-main">
-        <h2>Solution for all your Wooden <span>Furniture</span> needs collection</h2>
-        <button>See Collection</button>
+        <h2>{t('woodenFurnitureTitle')}</h2> {/* Çeviriyi kullan */}
+        <button>{t('seeCollection')}</button> {/* Çeviriyi kullan */}
       </div>
     </div>
-  )
+  );
 }
 
-export default WoodenFurniture
+export default WoodenFurniture;
