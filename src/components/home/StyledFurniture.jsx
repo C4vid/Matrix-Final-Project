@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { CiHeart } from 'react-icons/ci';
 import { HiOutlineShoppingCart } from 'react-icons/hi';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Nav } from 'react-bootstrap';
 
 const SUPABASE_URL = 'https://btsdjmkresicezlbutpm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU';
@@ -10,10 +12,12 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const StyledFurniture = () => {
+    const { t } = useTranslation(); 
     const [products, setProducts] = useState([]);
     const [hoveredProduct, setHoveredProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
@@ -34,7 +38,7 @@ const StyledFurniture = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div>{t('loading')}</div>;
     }
 
     const calculateDiscountPercentage = (cost, discountPrice) => {
@@ -70,16 +74,20 @@ const StyledFurniture = () => {
         if (error) {
             console.error('Error adding to cart:', error);
         } else {
-            alert(`${product.product_name} cart-a əlavə edildi!`); 
+            alert(`${product.product_name} ${t('addedToCart')}`); 
         }
     };
 
     return (
         <div className='styledfurniture'>
             <div className="styledfurniture-txt">
-                <h2>Styled <span>Furniture</span> in Unique Style</h2>
-                <p>Discover a world of comfort and style with our handcrafted furniture for every room.</p>
-                <button className='styledfurniture-txt-btn'>Shop Now</button>
+            <h2>{t('styledFurnitureTitle')}</h2> 
+           <p>{t('description')}</p>
+                <Nav.Link as={Link} to="/products">
+                    <button className='styledfurniture-txt-btn' >
+                        {t('addToCart')}
+                    </button>
+                </Nav.Link>
             </div>
             <ul className='styledfurniture-products'> 
                 {products.map((product) => {
@@ -126,7 +134,7 @@ const StyledFurniture = () => {
                                 />
                             </div>
                             <button className="product-item-buy-btn" onClick={() => handleAddToCart(product)} style={{ cursor: 'pointer' }}>
-                                <HiOutlineShoppingCart /> Add to Cart
+                                <HiOutlineShoppingCart /> {t('addToCart')}
                             </button>
                         </li>
                     );

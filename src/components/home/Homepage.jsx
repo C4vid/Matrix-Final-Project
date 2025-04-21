@@ -11,7 +11,7 @@ import HomeNavbar from './HomeNavbar'
 
 const Homepage = () => {
   return (
-    <div>
+    <div >
         <HomeNavbar/>
         <HomeHeader/> 
         <HomeExplore/>

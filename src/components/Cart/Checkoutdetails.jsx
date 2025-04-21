@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
 import HomeNavbar from '../home/HomeNavbar';
-import { useTranslation } from 'react-i18next'; // i18next'i import et
+import { useTranslation } from 'react-i18next'; 
 
 const supabaseUrl = 'https://btsdjmkresicezlbutpm.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU'; 
@@ -10,7 +10,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation(); // Çeviri fonksiyonunu al
+  const { t } = useTranslation(); 
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -27,17 +27,15 @@ const Checkout = () => {
 
   const [totalAmount, setTotalAmount] = useState(0);
   const [items, setItems] = useState([]);
-  const [isActive, setIsActive] = useState(false); // visited durumu için state
+  const [isActive, setIsActive] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Ad və soyad formatlama
     if (name === 'firstName' || name === 'lastName') {
       const formattedValue = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
       setFormData({ ...formData, [name]: formattedValue });
     } else if (name === 'email') {
-      // Emaili kiçik hərflərlə yaz
       setFormData({ ...formData, [name]: value.toLowerCase() });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -47,7 +45,7 @@ const Checkout = () => {
   const handleCardNumberChange = (e) => {
     const { value } = e.target;
     const formattedValue = value.replace(/[^0-9]/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
-    setFormData({ ...formData, cardNumber: formattedValue.slice(0, 19) }); // 16 rəqəm + 3 boşluq
+    setFormData({ ...formData, cardNumber: formattedValue.slice(0, 19) }); 
   };
 
   const handleCardExpiryChange = (e) => {
@@ -58,7 +56,7 @@ const Checkout = () => {
 
   const handleCVCChange = (e) => {
     const { value } = e.target;
-    setFormData({ ...formData, cardCVC: value.replace(/[^0-9]/g, '').slice(0, 3) }); // Maksimum 3 rəqəm
+    setFormData({ ...formData, cardCVC: value.replace(/[^0-9]/g, '').slice(0, 3) });
   };
 
   const calculateTotal = () => {
@@ -73,8 +71,7 @@ const Checkout = () => {
     const { data, error } = await supabase
       .from('products')
       .select('id, product_name, cost, discount_price, photo_url')
-      .eq('checkout', 'incart'); // Yalnızca incart olanları alır
-
+      .eq('checkout', 'incart'); 
     if (error) {
       console.error('Error fetching items:', error.message);
     } else {
@@ -85,12 +82,11 @@ const Checkout = () => {
   const fetchAccounts = async () => {
     const { data, error } = await supabase
       .from('accounts')
-      .select('visited'); // Sadece visited alanını alır
+      .select('visited'); 
 
     if (error) {
-      console.error('Error fetching accounts:', error.message); // Hata mesajını daha ayrıntılı yazdır
+      console.error('Error fetching accounts:', error.message); 
     } else {
-      // Eğer herhangi bir account "active" ise isActive state'ini güncelle
       const isAnyActive = data.some(account => account.visited === 'active');
       setIsActive(isAnyActive);
     }
@@ -99,8 +95,8 @@ const Checkout = () => {
   const updateCheckoutStatus = async () => {
     const { error } = await supabase
       .from('products')
-      .update({ checkout: 'checket_out' }) // checkout sütununu "checket_out" ile güncelle
-      .eq('checkout', 'incart'); // sadece "incart" olanları güncelle
+      .update({ checkout: 'checket_out' }) 
+      .eq('checkout', 'incart'); 
 
     if (error) {
       console.error('Error updating checkout status:', error.message);
@@ -109,7 +105,7 @@ const Checkout = () => {
 
   useEffect(() => {
     fetchItems();
-    fetchAccounts(); // Hesapları al
+    fetchAccounts(); 
   }, []);
 
   useEffect(() => {
@@ -119,24 +115,20 @@ const Checkout = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Bütün inputların dolu olduğunu yoxlayır
     const { firstName, lastName, country, address, zipCode, city, email, cardNumber, cardExpiry, cardCVC } = formData;
     if (!firstName || !lastName || !country || !address || !zipCode || !city || !email || !cardNumber || !cardExpiry || !cardCVC) {
-      alert(t('fillAllFields')); // Çeviri kullan
+      alert(t('fillAllFields')); 
       return;
     }
 
-    // Eğer visited durumu aktifse /succespage sayfasına yönlendir
     if (isActive) {
-      await updateCheckoutStatus(); // Checkout durumunu güncelle
-      navigate('/succespage');
+      await updateCheckoutStatus(); 
+      navigate('/successpage');
     } else {
-      alert(t('noActiveAccount')); // Çeviri kullan
-      navigate('/login'); // /login sayfasına yönlendir
+      alert(t('noActiveAccount')); 
+      navigate('/login'); 
     }
 
-    // İstifadəçi məlumatlarını al
-    // Buraya kullanıcı verilerini kaydetme işlemi eklenebilir
   };
 
   return (
@@ -144,7 +136,7 @@ const Checkout = () => {
       <HomeNavbar />
       <div className="checkout-container">
         <div className="checkout-form">
-          <h3>{t('paymentInfo')}</h3> {/* Çeviri kullan */}
+          <h3>{t('paymentInfo')}</h3> 
           <form onSubmit={handleSubmit}>
             <input type="text" name="firstName" placeholder={t('firstName')} value={formData.firstName} onChange={handleChange} required />
             <input type="text" name="lastName" placeholder={t('lastName')} value={formData.lastName} onChange={handleChange} required />
@@ -155,7 +147,7 @@ const Checkout = () => {
             <input type="email" name="email" placeholder={t('email')} value={formData.email} onChange={handleChange} required />
             <textarea name="notes" placeholder={t('notes')} value={formData.notes} onChange={handleChange} />
 
-            <h4>{t('cardInfo')}</h4> {/* Çeviri kullan */}
+            <h4>{t('cardInfo')}</h4> 
             <input type="text" name="cardNumber" placeholder={t('cardNumber')} value={formData.cardNumber} onChange={handleCardNumberChange} required />
             <input
               type="text"
@@ -166,13 +158,13 @@ const Checkout = () => {
               required
             />
             <input type="text" name="cardCVC" placeholder={t('cvc')} value={formData.cardCVC} onChange={handleCVCChange} required />
-            <button type="submit" className="checkout-button">{t('completePayment')}</button> {/* Çeviri kullan */}
+            <button type="submit" className="checkout-button">{t('completePayment')}</button> 
           </form>
         </div>
         <div className="checkout-summary">
-          <h3>{t('paymentMethods')}</h3> {/* Çeviri kullan */}
+          <h3>{t('paymentMethods')}</h3> 
           <p><strong>{t('totalAmount')}:</strong> ${totalAmount.toFixed(2)}</p>
-          <h4>{t('itemsPurchased')}:</h4> {/* Çeviri kullan */}
+          <h4>{t('itemsPurchased')}:</h4> 
           <ul>
             {items.map((item) => (
               <li key={item.id}>

@@ -14,11 +14,14 @@ import FAQPage from "./components/FAQ page/FAQPage.jsx";
 import ProductDetail from "./components/Products/Productpage.jsx";
 import About from "./components/About/About.jsx";
 import Blog from "./components/Blog/Blog.jsx";
-
+import { ThemeProvider } from './ThemeContext';
 import { I18nProvider } from './I18nContext';
+import SuccessPage from "./components/Cart/SuccessPage.jsx";
+import Dashboard from "./components/Dashboard/Dashboard.jsx";
 
 function App() {
   return (
+    <ThemeProvider>
     <I18nProvider>
       <Router>
         <Routes>
@@ -35,9 +38,12 @@ function App() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/successpage" element={<SuccessPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
     </I18nProvider>
+    </ThemeProvider>
   );
 }
 

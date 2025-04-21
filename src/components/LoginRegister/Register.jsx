@@ -9,7 +9,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const Register = () => {
     const navigate = useNavigate();
-    const { t } = useTranslation(); // Çeviri fonksiyonunu al
+    const { t } = useTranslation(); 
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -41,7 +41,7 @@ const Register = () => {
 
             if (existingUser) {
                 setIsSubmitting(false);
-                return setError(t("emailAlreadyRegistered")); // Çeviriyi kullan
+                return setError(t("emailAlreadyRegistered")); 
             }
 
             const { data, error: signupError } = await supabase.auth.signUp({
@@ -74,17 +74,17 @@ const Register = () => {
         } catch (error) {
             console.error("Genel hata:", error);
             setIsSubmitting(false);
-            setError(t("generalError")); // Çeviriyi kullan
+            setError(t("generalError")); 
         }
     };
 
     return (
         <div className="register">
             <div className="register-container">
-                <h2>{t("registerTitle")}</h2> {/* Çeviriyi kullan */}
+                <h2>{t("registerTitle")}</h2> 
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <label>{t("usernameLabel")}</label> {/* Çeviriyi kullan */}
+                        <label>{t("usernameLabel")}</label> 
                         <input
                             type="text"
                             name="username"
@@ -94,7 +94,7 @@ const Register = () => {
                         />
                     </div>
                     <div>
-                        <label>{t("emailLabel")}</label> {/* Çeviriyi kullan */}
+                        <label>{t("emailLabel")}</label> 
                         <input
                             type="email"
                             name="email"
@@ -104,7 +104,7 @@ const Register = () => {
                         />
                     </div>
                     <div>
-                        <label>{t("passwordLabel")}</label> {/* Çeviriyi kullan */}
+                        <label>{t("passwordLabel")}</label> 
                         <input
                             type="password"
                             name="password"
@@ -114,7 +114,7 @@ const Register = () => {
                         />
                     </div>
                     <div className="rememberme">
-                        <label>{t("rememberMeLabel")}</label> {/* Çeviriyi kullan */}
+                        <label>{t("rememberMeLabel")}</label> 
                         <input
                             type="checkbox"
                             name="rememberMe"
@@ -123,11 +123,11 @@ const Register = () => {
                         />
                     </div>
                     {error && <p className="error-message">{error}</p>}
-                    <button type="submit" disabled={isSubmitting}>{t("registerButton")}</button> {/* Çeviriyi kullan */}
+                    <button type="submit" disabled={isSubmitting}>{t("registerButton")}</button> 
                 </form>
                 <p>
                     {t("alreadyHaveAccountPrompt")}{" "}
-                    <button onClick={() => navigate("/login")}>{t("loginButton")}</button> {/* Çeviriyi kullan */}
+                    <button onClick={() => navigate("/login")}>{t("loginButton")}</button> 
                 </p>
             </div>
         </div>

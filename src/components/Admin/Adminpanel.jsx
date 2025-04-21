@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
-
+import Adminnavbar from "./Adminnavbar";
 const supabaseUrl = "https://btsdjmkresicezlbutpm.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -29,10 +29,16 @@ const AdminPanel = () => {
         setLoading(true);
         const { data, error } = await supabase.from("products").select("*");
         setLoading(false);
+        
         if (error) {
             setError("Məlumatları yükləyə bilmirik: " + error.message);
         } else {
-            setProducts(data);
+            console.log("Gelen veri:", data); 
+            if (Array.isArray(data)) {
+                setProducts(data);
+            } else {
+                setError("Gözlənilməz cavab alındı: data iterable deyil.");
+            }
         }
     };
 
@@ -50,7 +56,6 @@ const AdminPanel = () => {
             setError("Məhsul əlavə edilərkən xəta baş verdi: " + error.message);
         } else {
             if (Array.isArray(data) && data.length > 0) {
-                setProducts([...products, ...data]);
                 setNewProduct({
                     product_name: "",
                     product_category: "",
@@ -61,6 +66,7 @@ const AdminPanel = () => {
                     photo_hover_url: ""
                 });
                 setMessage("Məhsul uğurla əlavə edildi.");
+                fetchProducts(); 
             } else {
                 setError("Gözlənilməz cavab alındı: data iterable deyil.");
             }
@@ -81,9 +87,9 @@ const AdminPanel = () => {
             setError("Məhsul redaktə edilərkən xəta baş verdi: " + error.message);
         } else {
             if (data && data.length > 0) {
-                setProducts(products.map(product => (product.id === id ? data[0] : product)));
                 setEditProduct(null);
                 setMessage("Məhsul uğurla redaktə edildi.");
+                fetchProducts(); 
             } else {
                 setError("Gözlənilməz cavab alındı: data null və ya boşdur.");
             }
@@ -97,12 +103,14 @@ const AdminPanel = () => {
         if (error) {
             setError("Məhsul silinərkən xəta baş verdi: " + error.message);
         } else {
-            setProducts(products.filter(product => product.id !== id));
             setMessage("Məhsul uğurla silindi.");
+            fetchProducts(); 
         }
     };
 
     return (
+        <>
+        <Adminnavbar/>
         <div className="admin-panel">
             <h2>Admin Paneli</h2>
             {error && <p className="error-message">{error}</p>}
@@ -124,14 +132,14 @@ const AdminPanel = () => {
                 <input
                     type="number"
                     placeholder="Qiymət"
-                    value={newProduct.cost}
-                    onChange={(e) => setNewProduct({ ...newProduct, cost: parseFloat(e.target.value) })}
+                    value={newProduct.cost || ""}
+                    onChange={(e) => setNewProduct({ ...newProduct, cost: parseFloat(e.target.value) || 0 })}
                 />
                 <input
                     type="number"
                     placeholder="Endirimli Qiymət"
-                    value={newProduct.discount_price}
-                    onChange={(e) => setNewProduct({ ...newProduct, discount_price: parseFloat(e.target.value) })}
+                    value={newProduct.discount_price || ""}
+                    onChange={(e) => setNewProduct({ ...newProduct, discount_price: parseFloat(e.target.value) || 0 })}
                 />
                 <input
                     type="text"
@@ -206,14 +214,14 @@ const AdminPanel = () => {
                         <input
                             type="number"
                             placeholder="Qiymət"
-                            value={editProduct.cost}
-                            onChange={(e) => setEditProduct({ ...editProduct, cost: parseFloat(e.target.value) })}
+                            value={editProduct.cost || ""}
+                            onChange={(e) => setEditProduct({ ...editProduct, cost: parseFloat(e.target.value) || 0 })}
                         />
                         <input
                             type="number"
                             placeholder="Endirimli Qiymət"
-                            value={editProduct.discount_price}
-                            onChange={(e) => setEditProduct({ ...editProduct, discount_price: parseFloat(e.target.value) })}
+                            value={editProduct.discount_price || ""}
+                            onChange={(e) => setEditProduct({ ...editProduct, discount_price: parseFloat(e.target.value) || 0 })}
                         />
                         <input
                             type="text"
@@ -235,6 +243,7 @@ const AdminPanel = () => {
                 </div>
             )}
         </div>
+        </>
     );
 };
 

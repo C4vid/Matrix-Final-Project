@@ -7,13 +7,13 @@ import brand4 from '../../assets/Images/HomePage/brands/l4.png';
 import brand5 from '../../assets/Images/HomePage/brands/l5.png';
 
 const HomeBrands = () => {
-  const { t } = useTranslation(); // Çeviri fonksiyonunu al
+  const { t } = useTranslation(); 
 
   return (
     <div className='homebrands'>
       <div className="homebrands-header">
-        <p>{t('brands')}</p> {/* Çeviriyi kullan */}
-        <h2>{t('browsedBy')} <span>{t('brand')}</span></h2> {/* Çeviriyi kullan */}
+        <p>{t('brands')}</p> 
+        <h2>{t('browsedBy')} <span>{t('brand')}</span></h2> 
       </div>
       <div className="homebrands-body">
         <img src={brand1} alt="" />

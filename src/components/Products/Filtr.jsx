@@ -4,7 +4,7 @@ import { CiHeart } from 'react-icons/ci';
 import { HiOutlineShoppingCart } from 'react-icons/hi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import HomeNavbar from '../home/HomeNavbar';
-import { useTranslation } from 'react-i18next'; // i18next'i import et
+import { useTranslation } from 'react-i18next'; 
 
 const SUPABASE_URL = 'https://btsdjmkresicezlbutpm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU';
@@ -14,7 +14,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 function Filtr() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useTranslation(); // Çeviri fonksiyonunu al
+  const { t } = useTranslation();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [hoveredProduct, setHoveredProduct] = useState(null);
@@ -79,13 +79,13 @@ function Filtr() {
   };
 
   const handleResetFilters = () => {
-    setFilterText(""); // Axtarış mətnini sıfırlayır
-    setCategoryFilter(""); // Kateqoriya seçimlərini sıfırlayır
-    navigate(`?search=&category=`); // URL-i yeniləyir
+    setFilterText(""); 
+    setCategoryFilter(""); 
+    navigate(`?search=&category=`); 
   };
 
   if (loading) {
-    return <div className="loading">{t('loading')}</div>; // Çeviriyi kullan
+    return <div className="loading">{t('loading')}</div>; 
   }
 
   const calculateDiscountPercentage = (cost, discountPrice) => {
@@ -109,7 +109,7 @@ function Filtr() {
       setProducts((prevProducts) =>
         prevProducts.map((p) => (p.id === product.id ? { ...p, product_wishlist: newStatus } : p))
       );
-      alert(`${product.product_name} ${t('wishlistAdded')}`); // Çeviriyi kullan
+      alert(`${product.product_name} ${t('wishlistAdded')}`);
     }
   };
 
@@ -122,7 +122,7 @@ function Filtr() {
     if (error) {
       console.error('Error adding to cart:', error);
     } else {
-      alert(`${product.product_name} ${t('cartAdded')}`); // Çeviriyi kullan
+      alert(`${product.product_name} ${t('cartAdded')}`); 
     }
   };
 
@@ -143,14 +143,13 @@ function Filtr() {
 
         <input
           type="text"
-          placeholder={t('searchPlaceholder')} // Çeviriyi kullan
-          value={filterText}
+          placeholder={t('searchPlaceholder')}
           onChange={handleSearch}
           className="search-input"
         />
         <div className="category-buttons">
           <button className="reset-button" onClick={handleResetFilters}>
-            {t('resetSearch')} // Çeviriyi kullan
+            {t('resetSearch')} 
           </button>
           {categories.map((category, index) => (
             <button key={index} onClick={() => handleCategoryClick(category)}>
@@ -180,7 +179,7 @@ function Filtr() {
                   </div>
                   {discountPercentage > 0 && (
                     <p className='product-item-discountpercentage' onClick={() => navigate(`/product/${product.id}`)} style={{ cursor: 'pointer' }}>
-                      {discountPercentage}% {t('off')} {/* Çeviriyi kullan */}
+                      {discountPercentage}% {t('off')} 
                     </p>
                   )}
                   <img
@@ -200,13 +199,13 @@ function Filtr() {
                       style={{ cursor: 'pointer' }} />
                   </div>
                   <button className="product-item-buy-btn" onClick={() => handleAddToCart(product)}>
-                    <HiOutlineShoppingCart /> {t('addToCart')} {/* Çeviriyi kullan */}
+                    <HiOutlineShoppingCart /> {t('addToCart')} 
                   </button>
                 </li>
               );
             })
           ) : (
-            <p>{t('noProductsFound')}</p> // Çeviriyi kullan
+            <p>{t('noProductsFound')}</p> 
           )}
         </ul>
       </div>

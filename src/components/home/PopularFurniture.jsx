@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { CiHeart } from "react-icons/ci";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';  
-import { useTranslation } from 'react-i18next'; // i18next'i import et
+import { useTranslation } from 'react-i18next'; 
 
 const supabaseUrl = 'https://btsdjmkresicezlbutpm.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU';
@@ -13,7 +13,7 @@ const PopularFurniture = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();  
-  const { t } = useTranslation(); // Çeviri fonksiyonunu al
+  const { t } = useTranslation(); 
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -36,7 +36,7 @@ const PopularFurniture = () => {
   }, []);
 
   if (loading) {
-    return <div>{t('loading')}...</div>; // Çeviriyi kullan
+    return <div>{t('loading')}...</div>; 
   }
 
   const calculateDiscountPercentage = (cost, discountPrice) => {
@@ -72,15 +72,15 @@ const PopularFurniture = () => {
     if (error) {
       console.error('Error adding to cart:', error);
     } else {
-      alert(`${product.product_name} ${t('addedToCart')}!`); // Çeviriyi kullan
+      alert(`${product.product_name} ${t('addedToCart')}!`); 
       console.log('Product added to cart:', product);
     }
   };
 
   return (
     <div className="popular-furniture">
-      <p>{t('newArrival')}</p> {/* Çeviriyi kullan */}
-      <h3 className='popular-furniture-header'>{t('popular')} <span>{t('furniture')}</span></h3> {/* Çeviriyi kullan */}
+      <p className='popular-furniture-header' >{t('newArrival')}</p> 
+      <h3 className='popular-furniture-header'>{t('popular')} <span>{t('furniture')}</span></h3> 
       <ul className="product-list">
         {products.map((product) => {
           const discountPercentage = calculateDiscountPercentage(product.cost, product.discount_price);
@@ -125,7 +125,7 @@ const PopularFurniture = () => {
               </div>
               <button className="product-item-buy-btn" onClick={() => handleAddToCart(product)}
                 style={{ cursor: 'pointer' }} >
-                <HiOutlineShoppingCart /> {t('addToCart')} {/* Çeviriyi kullan */}
+                <HiOutlineShoppingCart /> {t('addToCart')} 
               </button>
             </li>
           );

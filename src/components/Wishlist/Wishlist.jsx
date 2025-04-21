@@ -3,14 +3,14 @@ import { createClient } from '@supabase/supabase-js';
 import { CiHeart } from "react-icons/ci";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 import HomeNavbar from '../home/HomeNavbar';
-import { useTranslation } from 'react-i18next'; // i18next'i import et
+import { useTranslation } from 'react-i18next';
 
 const supabaseUrl = 'https://btsdjmkresicezlbutpm.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0c2RqbWtyZXNpY2V6bGJ1dHBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMyODkzNTIsImV4cCI6MjAzODg2NTM1Mn0.EbVl62cSHhz3K0NFOW8LJMPrjjHJXPhVtAJMO_PmvlU'; // Güvenlik için anahtarı gizleyin
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Wishlist = () => {
-  const { t } = useTranslation(); // Çeviri fonksiyonunu al
+  const { t } = useTranslation();
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -48,18 +48,31 @@ const Wishlist = () => {
     }
   };
 
+  const handleAddToCart = async (product) => {
+    const { error } = await supabase
+      .from('products')
+      .update({ checkout: 'incart' }) 
+      .eq('id', product.id);
+
+    if (error) {
+      console.error('Error adding to cart:', error);
+    } else {
+      alert(`${product.product_name} cart-a əlavə edildi!`);
+    }
+  };
+
   if (loading) {
-    return <div>{t('loading')}</div>; // Çeviriyi kullan
+    return <div>{t('loading')}</div>;
   }
 
   return (
     <>
       <HomeNavbar />
       <div className="popular-furniture">
-        <h3>{t('yourWishlist')} <span>❤️</span></h3>
+        <h3>{t('yourWishlist')}</h3>
         <ul className="product-list">
           {wishlistItems.length === 0 ? (
-            <p>{t('emptyWishlist')}</p> // Çeviriyi kullan
+            <p>{t('emptyWishlist')}</p>
           ) : (
             wishlistItems.map((product) => (
               <li key={product.id} className="product-item">
@@ -91,8 +104,8 @@ const Wishlist = () => {
                   className="product-heart-icon" 
                   style={{ color: 'red', cursor: 'pointer' }} 
                 />
-                <button className="product-item-buy-btn">
-                  <HiOutlineShoppingCart /> {t('addToCart')} {/* Çeviriyi kullan */}
+                <button className="product-item-buy-btn" onClick={() => handleAddToCart(product)}>
+                  <HiOutlineShoppingCart /> {t('addToCart')}
                 </button>
               </li>
             ))
